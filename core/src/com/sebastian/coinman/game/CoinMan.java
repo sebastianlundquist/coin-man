@@ -28,10 +28,21 @@ public class CoinMan extends ApplicationAdapter {
 	Texture coin;
 	int coinCount;
 
+	ArrayList<Integer> bombXs = new ArrayList<>();
+	ArrayList<Integer> bombYs = new ArrayList<>();
+	Texture bomb;
+	int bombCount;
+
 	public void makeCoin() {
 		float height = random.nextFloat() * Gdx.graphics.getHeight();
 		coinYs.add((int)height);
 		coinXs.add(Gdx.graphics.getWidth());
+	}
+
+	public void makeBomb() {
+		float height = random.nextFloat() * Gdx.graphics.getHeight();
+		bombYs.add((int)height);
+		bombXs.add(Gdx.graphics.getWidth());
 	}
 
 	@Override
@@ -48,6 +59,7 @@ public class CoinMan extends ApplicationAdapter {
 		manY = height / 2 - man[0].getHeight() / 2;
 
 		coin = new Texture("coin.png");
+		bomb = new Texture("bomb.png");
 		random = new Random();
 	}
 
@@ -55,6 +67,19 @@ public class CoinMan extends ApplicationAdapter {
 	public void render () {
 		batch.begin();
 		batch.draw(background, 0, 0, width, height);
+
+		if (bombCount < 200) {
+			bombCount++;
+		}
+		else {
+			bombCount = 0;
+			makeBomb();
+		}
+
+		for (int i = 0; i < bombXs.size(); i++) {
+			batch.draw(bomb, bombXs.get(i), bombYs.get(i));
+			bombXs.set(i, bombXs.get(i) - 15);
+		}
 
 		if (coinCount < 100) {
 			coinCount++;
