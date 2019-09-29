@@ -14,6 +14,9 @@ public class CoinMan extends ApplicationAdapter {
 	int height;
 	int manState;
 	int pause = 0;
+	float gravity = 1f;
+	float velocity = 0;
+	int manY;
 	
 	@Override
 	public void create () {
@@ -26,12 +29,18 @@ public class CoinMan extends ApplicationAdapter {
 		man[3] = new Texture("frame-4.png");
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
+		manY = height / 2 - man[0].getHeight() / 2;
 	}
 
 	@Override
 	public void render () {
 		batch.begin();
 		batch.draw(background, 0, 0, width, height);
+
+		if (Gdx.input.justTouched()) {
+			velocity = -40;
+		}
+
 		if (pause < 8) {
 			pause++;
 		}
@@ -44,8 +53,15 @@ public class CoinMan extends ApplicationAdapter {
 				manState = 0;
 			}
 		}
-		
-		batch.draw(man[manState], width / 2 - man[0].getWidth() / 2, height / 2 - man[0].getHeight() / 2);
+
+		velocity += gravity;
+		manY -= velocity;
+
+		if (manY <= 0) {
+			manY = 0;
+		}
+
+		batch.draw(man[manState], width / 4 - man[0].getWidth() / 2, manY);
 		batch.end();
 	}
 	
